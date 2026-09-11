@@ -105,3 +105,49 @@ kbd {
   background: rgba(255, 255, 255, 0.34);
   vertical-align: middle;
 }
+
+/* ─────────── 2. ЦААС ─────────── */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");
+  animation: grainShift 6s steps(6) infinite;
+}
+@keyframes grainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+  16% {
+    transform: translate(-2%, -3%);
+  }
+  33% {
+    transform: translate(2%, -1%);
+  }
+  50% {
+    transform: translate(-1%, 2%);
+  }
+  66% {
+    transform: translate(3%, 1%);
+  }
+  83% {
+    transform: translate(-3%, -2%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+  pointer-events: none;
+  background: radial-gradient(
+    130% 100% at 50% 40%,
+    transparent 55%,
+    rgba(60, 55, 45, 0.14) 100%
+  );
+}
