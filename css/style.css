@@ -1246,3 +1246,79 @@ body.is-hero .dots {
   opacity: 0;
   pointer-events: none;
 }
+
+/* ─────────── 9. БҮТЭН ЗУРАГТ СЛАЙД ─────────── */
+.slide--bleed {
+  padding: calc(env(safe-area-inset-top, 0px) + 70px) 0
+    calc(env(safe-area-inset-bottom, 0px) + 56px);
+  align-content: stretch;
+}
+.bleed {
+  display: grid;
+  grid-template-columns: 1fr 0.76fr;
+  height: 100%;
+  align-items: center;
+}
+.bleed__text {
+  padding: 0 clamp(24px, 4vw, 70px) 0 var(--gut);
+}
+.bleed__text .h-lg {
+  margin-block: clamp(8px, 1.4vh, 16px) clamp(14px, 2.4vh, 30px);
+}
+.bleed__text .lead {
+  margin-bottom: clamp(16px, 2.8vh, 34px);
+  max-width: 26ch;
+}
+.bleed__img {
+  margin: 0;
+  height: 100%;
+}
+.bleed__img .ph {
+  height: 100%;
+}
+@media (max-width: 860px) {
+  .bleed {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 0.8fr;
+  }
+  .bleed__text {
+    padding: calc(env(safe-area-inset-top, 0px) + 76px) var(--gut) 0;
+    align-self: end;
+  }
+}
+
+/* ─────────── 10. ГУРВАН ДАВХАР ─────────── */
+.trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 1.6vw, 22px);
+  margin-top: clamp(22px, 4vh, 56px);
+  perspective: 1400px;
+}
+@media (max-width: 820px) {
+  .trio {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+.trio__i {
+  padding: clamp(18px, 2.4vh, 32px);
+  border: 1px solid var(--rule);
+  background: var(--paper-hi);
+  transform-style: preserve-3d;
+}
+.trio__n {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  color: var(--ink-30);
+}
+.trio__i h3 {
+  font-family: var(--f-display);
+  font-size: clamp(20px, min(2.6vw, 3.6vh), 36px);
+  font-weight: 500;
+  margin: clamp(10px, 1.6vh, 18px) 0 clamp(6px, 1vh, 12px);
+}
+.trio__i p {
+  color: var(--ink-55);
+}
