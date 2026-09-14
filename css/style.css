@@ -1609,3 +1609,148 @@ body.is-hero .dots {
   border-left: 2px solid var(--ink);
   padding-left: 14px;
 }
+
+/* ─────────── 14. GEN-Z СЛАЙД ─────────── */
+.memes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 1.6vw, 22px);
+  perspective: 1400px;
+}
+@media (max-width: 860px) {
+  .memes {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+.meme {
+  position: relative;
+  min-height: clamp(200px, 32vh, 330px);
+  padding: clamp(20px, 3.2vh, 38px);
+  border: 1px dashed var(--ink-30);
+  background: var(--paper-hi);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6vh, 18px);
+  transition:
+    transform 0.55s var(--e-spring),
+    box-shadow 0.55s,
+    border-color 0.4s;
+}
+.meme:hover {
+  transform: translateY(-6px) rotate(-0.8deg);
+  border-color: var(--ink);
+  box-shadow: 0 30px 52px -40px rgba(20, 18, 14, 0.75);
+}
+.meme__badge {
+  align-self: flex-start;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(22px, min(2.6vw, 3.6vh), 36px);
+  line-height: 1;
+  border: 1px solid var(--ink);
+  padding: 6px 14px;
+}
+.meme__badge--w {
+  background: var(--ink);
+  color: var(--paper);
+}
+.meme__badge--pov {
+  font-family: var(--f-mono);
+  font-size: clamp(13px, 1.9vh, 17px);
+  letter-spacing: 0.14em;
+  padding: 10px 14px;
+}
+.meme p {
+  font-size: clamp(13px, min(1.3vw, 2.1vh), 19px);
+  line-height: 1.55;
+}
+.meme__tag {
+  margin-top: auto;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-30);
+}
+.memes__ps {
+  margin-top: clamp(16px, 2.6vh, 30px);
+  text-align: center;
+  color: var(--ink-55);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: var(--t-lead);
+}
+
+/* ─────────── 15. ХАДАГ ─────────── */
+.khadag {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+}
+@media (max-width: 860px) {
+  .khadag {
+    grid-template-columns: 1fr;
+  }
+  .khadag__img {
+    display: none;
+  }
+}
+.khadag__img {
+  margin: 0;
+  aspect-ratio: 4/5;
+  max-height: 58vh;
+}
+.tones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: clamp(16px, 2.6vh, 30px);
+}
+.tone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px 8px 9px;
+  border: 1px solid var(--rule);
+  background: var(--paper-hi);
+  font-size: 12.5px;
+  transition:
+    transform 0.5s var(--e-spring),
+    border-color 0.4s,
+    box-shadow 0.5s;
+}
+.tone i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--tone);
+  flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+}
+.tone b {
+  font-weight: 400;
+  color: var(--ink-30);
+  font-size: 11px;
+}
+.tone:hover {
+  transform: translateY(-4px) scale(1.04);
+  border-color: var(--ink-30);
+  box-shadow: 0 14px 26px -20px rgba(20, 18, 14, 0.7);
+}
+.tone[data-tone="blue"] {
+  --tone: var(--khad-blue);
+}
+.tone[data-tone="white"] {
+  --tone: #fff;
+}
+.tone[data-tone="yellow"] {
+  --tone: var(--khad-yellow);
+}
+.tone[data-tone="red"] {
+  --tone: var(--khad-red);
+}
+.tone[data-tone="green"] {
+  --tone: var(--khad-green);
+}
