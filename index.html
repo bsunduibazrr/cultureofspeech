@@ -20,6 +20,82 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <span class="loader__seal" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <path class="ls-p" d="M6.6 25.4h18.8" />
+            <path class="ls-p" d="M8.5 25.4v-9.1" />
+            <path class="ls-p" d="M23.5 25.4v-9.1" />
+            <path
+              class="ls-p"
+              d="M8.5 16.3C8.5 11.5 11.9 8 16 8s7.5 3.5 7.5 8.3"
+            />
+            <ellipse class="ls-p" cx="16" cy="8" rx="3.4" ry="1.35" />
+            <path class="ls-p" d="M16 6.65V4.6" />
+            <path class="ls-p" d="M8.5 20.4h15" />
+            <path class="ls-p" d="M14.3 25.4v-4.2h3.4v4.2" />
+          </svg>
+        </span>
+        <p class="loader__kicker">Хэл ярианы соёл · Семинар III</p>
+        <div class="loader__word" aria-hidden="true">
+          <span><i>М</i></span
+          ><span><i>Э</i></span
+          ><span><i>Н</i></span
+          ><span><i>Д</i></span>
+        </div>
+        <div class="loader__meter">
+          <div class="loader__bar"><i id="loaderBar"></i></div>
+          <div class="loader__num">
+            <span>Ачааллаж байна</span>
+            <b><span id="loaderNum">0</span><small>%</small></b>
+          </div>
+        </div>
+      </div>
+      <div class="loader__sheet"></div>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="cursor" id="cursor">
+      <span class="cursor__dot"></span><span class="cursor__ring"></span>
+    </div>
+
+    <header class="topbar">
+      <button class="topbar__mark" id="homeBtn" type="button">
+        <span class="seal" aria-hidden="true">
+          <svg
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6.6 25.4h18.8" />
+            <path d="M8.5 25.4v-9.1" />
+            <path d="M23.5 25.4v-9.1" />
+            <path d="M8.5 16.3C8.5 11.5 11.9 8 16 8s7.5 3.5 7.5 8.3" />
+            <ellipse cx="16" cy="8" rx="3.4" ry="1.35" />
+            <path d="M16 6.65V4.6" />
+            <path d="M8.5 20.4h15" />
+            <path d="M14.3 25.4v-4.2h3.4v4.2" />
+          </svg>
+        </span>
+        <span class="mark__txt">
+          <b>Хэл ярианы соёл - 4-р баг</b>
+        </span>
+      </button>
+      <div class="topbar__meta">
+        <span id="secName"></span>
+        <span class="topbar__count"
+          ><u></u><i id="secNum">01</i><em id="secTot">/ 31</em></span
+        >
+      </div>
+    </header>
+
+    <div class="progress"><i id="progressBar"></i></div>
+    <nav class="dots" id="dots" aria-label="Слайдууд"></nav>
 
     <main class="deck" id="deck">
     </main>
