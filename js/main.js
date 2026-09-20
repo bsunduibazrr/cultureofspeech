@@ -66,4 +66,80 @@
       })
       .join(" ");
   });
+
+  /* ═══ 3. СЛАЙДУУД ═══ */
+  var slides = $$(".slide");
+  var TOTAL = slides.length;
+  var cur = 0;
+
+  slides.forEach(function (s, si) {
+    s.setAttribute('aria-hidden', 'true');
+    $$('[data-anim]', s).forEach(function (el, i) { el.style.setProperty('--i', i); });
+    var num = $('[data-num]', s);
+    if (num) num.textContent = pad2(si + 1);
+  });
+
+  /* Мөнхийн хөдөлгөөн — элемент бүр өөрийн хэмнэлтэй */
+  if (!reduced) {
+    $$('.float, .float-ic, .ph img').forEach(function (el) {
+      var base = el.classList.contains('float-ic') ? 5.4 : (el.tagName === 'IMG' ? 12 : 6.4);
+      var d = base + Math.random() * base * 0.75;
+      el.style.animationDuration = d.toFixed(2) + 's';
+      el.style.animationDelay = (-Math.random() * d).toFixed(2) + 's';
+    });
+  }
+
+  /* ─ хажуугийн цэс ─ */
+  var dotsWrap = $("#dots"),
+    secName = $("#secName"),
+    secNum = $("#secNum"),
+    secTot = $("#secTot"),
+    bar = $("#progressBar");
+  secTot.textContent = "/ " + pad2(TOTAL);
+
+  var dots = slides.map(function (s, i) {
+    var b = document.createElement("button");
+    b.className = "dot";
+    b.type = "button";
+    b.setAttribute("aria-label", s.dataset.name);
+    b.innerHTML = "<span>" + s.dataset.name + "</span><i></i>";
+    b.addEventListener("click", function () {
+      go(i);
+    });
+    dotsWrap.appendChild(b);
+    return b;
+  });
+
+  var busy = false,
+    busyT;
+  function go(i) {
+    i = clamp(i, 0, TOTAL - 1);
+    if (i === cur) return;
+    cur = i;
+    render();
+    busy = true;
+    clearTimeout(busyT);
+    busyT = setTimeout(
+      function () {
+        busy = false;
+      },
+      reduced ? 60 : 640,
+    );
+    dimHint();
+  }
+
+  function render() {
+    slides.forEach(function (s, i) {
+      s.classList.toggle("is-active", i === cur);
+      s.classList.toggle("is-above", i < cur);
+      s.setAttribute("aria-hidden", i === cur ? "false" : "true");
+      dots[i].classList.toggle("is-active", i === cur);
+    });
+    secName.textContent = slides[cur].dataset.name;
+    secNum.textContent = pad2(cur + 1);
+    document.body.classList.toggle("is-hero", cur === 0);
+    bar.style.width = (((cur + 1) / TOTAL) * 100).toFixed(2) + "%";
+    ringSlideActive = slides[cur].classList.contains("slide--ring");
+    if (ringSlideActive) ringLast = ringT0 = performance.now();
+  }
 })();
