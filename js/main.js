@@ -142,4 +142,91 @@
     ringSlideActive = slides[cur].classList.contains("slide--ring");
     if (ringSlideActive) ringLast = ringT0 = performance.now();
   }
+
+  /* ═══ 4. ҮЛДЭХ УДИРДЛАГА — дугуй, товчлуур, хуруу ═══ */
+  var acc = 0,
+    lastEvt = 0,
+    lastFire = 0;
+  window.addEventListener(
+    "wheel",
+    function (e) {
+      e.preventDefault();
+      var now = performance.now();
+      if (now - lastEvt > 260) acc = 0; // шинэ хөдөлгөөн
+      lastEvt = now;
+      acc += e.deltaY * (e.deltaMode === 1 ? 18 : 1);
+      if (now - lastFire > 900 && Math.abs(acc) > 58) {
+        lastFire = now;
+        go(cur + (acc > 0 ? 1 : -1));
+        acc = 0;
+      }
+    },
+    { passive: false },
+  );
+
+  var tY = 0,
+    tX = 0;
+  window.addEventListener(
+    "touchstart",
+    function (e) {
+      tY = e.touches[0].clientY;
+      tX = e.touches[0].clientX;
+    },
+    { passive: true },
+  );
+  window.addEventListener(
+    "touchend",
+    function (e) {
+      var dy = tY - e.changedTouches[0].clientY;
+      var dx = tX - e.changedTouches[0].clientX;
+      if (Math.abs(dy) > 55 && Math.abs(dy) > Math.abs(dx))
+        go(cur + (dy > 0 ? 1 : -1));
+      else if (Math.abs(dx) > 55 && ringSlideActive) ringStep(dx > 0 ? 1 : -1);
+    },
+    { passive: true },
+  );
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === "ArrowDown" || k === "PageDown" || k === " " || k === "Enter") {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (k === "ArrowUp" || k === "PageUp" || k === "Backspace") {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (k === "ArrowRight") {
+      e.preventDefault();
+      ringSlideActive ? ringStep(1) : go(cur + 1);
+    } else if (k === "ArrowLeft") {
+      e.preventDefault();
+      ringSlideActive ? ringStep(-1) : go(cur - 1);
+    } else if (k === "Home") {
+      e.preventDefault();
+      go(0);
+    } else if (k === "End") {
+      e.preventDefault();
+      go(TOTAL - 1);
+    } else if (k >= "1" && k <= "9") {
+      e.preventDefault();
+      go(parseInt(k, 10) - 1);
+    } else if (k === "f" || k === "F" || k === "ф" || k === "Ф") {
+      e.preventDefault();
+      if (!document.fullscreenElement) {
+        if (root.requestFullscreen) { var fs = root.requestFullscreen(); if (fs && fs.catch) fs.catch(function () {}); }
+      } else { var ex = document.exitFullscreen(); if (ex && ex.catch) ex.catch(function () {}); }
+    }
+  });
+
+  $("#homeBtn").addEventListener("click", function () {
+    go(0);
+  });
+
+  var hintEl = $("#hint"),
+    dimmed = false;
+  function dimHint() {
+    if (dimmed || !hintEl) return;
+    dimmed = true;
+    hintEl.classList.add("is-dim");
+  }
 })();
