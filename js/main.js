@@ -289,4 +289,87 @@
         f > 0.985 ? "none" : "blur(" + ((1 - f) * 2.6).toFixed(2) + "px)";
     }
   }
+
+  /* ═══ 6. ХУЛГАНЫ ПАРАЛЛАКС — слайд амьд мэт хазайна ═══ */
+  var pmx = 0,
+    pmy = 0,
+    cmx = 0,
+    cmy = 0;
+  if (!coarse && !reduced) {
+    window.addEventListener(
+      "mousemove",
+      function (e) {
+        pmx = (e.clientX / window.innerWidth - 0.5) * 2;
+        pmy = (e.clientY / window.innerHeight - 0.5) * 2;
+      },
+      { passive: true },
+    );
+  }
+
+  /* ═══ 7. 3D HOVER TILT ═══ */
+  if (!coarse && !reduced) {
+    $$(".tilt").forEach(function (el) {
+      var raf = null,
+        tx = 0,
+        ty = 0;
+      function apply() {
+        raf = null;
+        el.style.transform =
+          "perspective(900px) rotateX(" +
+          tx.toFixed(2) +
+          "deg) rotateY(" +
+          ty.toFixed(2) +
+          "deg) translateZ(20px)";
+      }
+      el.addEventListener("mousemove", function (e) {
+        var r = el.getBoundingClientRect();
+        tx = -((e.clientY - r.top) / r.height - 0.5) * 10;
+        ty = ((e.clientX - r.left) / r.width - 0.5) * 12;
+        if (!raf) raf = requestAnimationFrame(apply);
+      });
+      el.addEventListener("mouseleave", function () {
+        if (raf) {
+          cancelAnimationFrame(raf);
+          raf = null;
+        }
+        el.style.transform = "";
+      });
+    });
+  }
+
+  /* ═══ 8. КУРСОР ═══ */
+  var cring = null,
+    cdot = null,
+    rx = 0,
+    ry = 0,
+    mx = 0,
+    my = 0;
+  if (!coarse) {
+    var curEl = $("#cursor");
+    cdot = $(".cursor__dot", curEl);
+    cring = $(".cursor__ring", curEl);
+    mx = rx = window.innerWidth / 2;
+    my = ry = window.innerHeight / 2;
+    window.addEventListener(
+      "mousemove",
+      function (e) {
+        mx = e.clientX;
+        my = e.clientY;
+        curEl.classList.add("is-on");
+        cdot.style.transform =
+          "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
+      },
+      { passive: true },
+    );
+    var HOT =
+      "a,button,.trio__i,.face,.season,.meme,.mcard,.member,.tone,.sticky-note,.ph,.vcol li";
+    document.addEventListener("mouseover", function (e) {
+      if (e.target.closest && e.target.closest(HOT))
+        curEl.classList.add("is-hot");
+    });
+    document.addEventListener("mouseout", function (e) {
+      if (e.target.closest && e.target.closest(HOT))
+        curEl.classList.remove("is-hot");
+    });
+  }
 })();
