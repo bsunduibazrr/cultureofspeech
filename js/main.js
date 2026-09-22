@@ -372,4 +372,66 @@
         curEl.classList.remove("is-hot");
     });
   }
+
+  /* ═══ 9. ГОЛ ЦИКЛ ═══ */
+  function frame(now) {
+    ringTick(now);
+
+    cmx += (pmx - cmx) * 0.06;
+    cmy += (pmy - cmy) * 0.06;
+    root.style.setProperty("--mx", (cmx * 2.6).toFixed(3) + "deg");
+    root.style.setProperty("--my", (-cmy * 1.9).toFixed(3) + "deg");
+
+    if (cring) {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      cring.style.transform =
+        "translate(" +
+        rx.toFixed(1) +
+        "px," +
+        ry.toFixed(1) +
+        "px) translate(-50%,-50%)";
+    }
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener("resize", layoutRing, { passive: true });
+
+  var loader = $("#loader"),
+    lbar = $("#loaderBar"),
+    lnum = $("#loaderNum");
+  var pct = 0,
+    loaded = false,
+    started = false;
+
+  var iv = setInterval(function () {
+    pct += Math.random() * 12 + 5;
+    if (pct >= (loaded ? 100 : 88)) pct = loaded ? 100 : 88;
+    lbar.style.width = pct + "%";
+    lnum.textContent = Math.floor(pct);
+    if (pct >= 100) {
+      clearInterval(iv);
+      setTimeout(start, 200);
+    }
+  }, 100);
+
+  function ready() {
+    loaded = true;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready);
+  window.addEventListener("load", ready);
+  setTimeout(ready, 3000);
+
+  function start() {
+    if (started) return;
+    started = true;
+    loader.classList.add("is-done");
+    document.body.classList.add("is-ready");
+    layoutRing();
+    render();
+    requestAnimationFrame(frame);
+    setTimeout(layoutRing, 500);
+  }
+
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 })();
