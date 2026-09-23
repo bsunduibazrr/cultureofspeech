@@ -757,6 +757,10 @@ body.is-ready .hint {
   transform: rotateY(var(--mx)) rotateX(var(--my));
   transition: transform 0.6s var(--e-out);
 }
+/* ← → дарж эргүүлж байхад налалт товчлуурыг шууд дагана */
+body.is-tilting .slide.is-active .slide__inner {
+  transition: transform 0.1s linear;
+}
 
 /* агуулгын шатлалт (stagger) */
 [data-anim] {
@@ -867,6 +871,13 @@ em {
 }
 .tilt:hover {
   box-shadow: 0 30px 56px -44px rgba(20, 18, 14, 0.6);
+}
+/* налж байх хугацаанд өнцгийг JS кадр бүрт өөрөө жолооддог тул
+   transform-д шилжилт тавихгүй — [data-anim]-ийн 0.95s чирэхгүй */
+.tilt.is-tilt {
+  transition:
+    box-shadow 0.5s var(--e-out),
+    border-color 0.5s;
 }
 
 /* зураг — хэвлэмэл хавтан */
