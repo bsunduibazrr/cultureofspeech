@@ -1505,17 +1505,27 @@ body.is-hero .dots {
   box-shadow: 0 30px 60px -48px rgba(20, 18, 14, 0.8);
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.965) translateY(8px);
+  /* шинэ хөзөр эргэлтийн ирж буй талаас нисч ордог */
+  transform: translate3d(calc(var(--dir, 1) * 42px), 0, -90px)
+    rotateY(calc(var(--dir, 1) * 20deg)) scale(0.93);
   transition:
-    opacity 0.5s var(--e-out),
-    transform 0.7s var(--e-out),
-    visibility 0s 0.5s;
+    opacity 0.42s var(--e-out),
+    transform 0.72s var(--e-out),
+    visibility 0s 0.42s;
+}
+/* гарч буй хөзөр эсрэг тал руугаа од */
+.tn-card.is-out {
+  transform: translate3d(calc(var(--dir, 1) * -42px), 0, -90px)
+    rotateY(calc(var(--dir, 1) * -20deg)) scale(0.93);
 }
 .tn-card.is-on {
   opacity: 1;
   visibility: visible;
   transform: none;
-  transition-delay: 0.14s, 0.14s, 0s;
+  transition:
+    opacity 0.5s var(--e-out) 0.16s,
+    transform 0.8s var(--e-spring) 0.16s,
+    visibility 0s;
 }
 .tn-card__img {
   overflow: hidden;
