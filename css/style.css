@@ -1323,7 +1323,7 @@ body.is-hero .dots {
   color: var(--ink-55);
 }
 
-/* ─────────── 11. 3D БӨГЖ ─────────── */
+/* ─────────── 11. ТООНО ХҮРД ─────────── */
 .slide--ring {
   align-content: stretch;
 }
@@ -1331,7 +1331,7 @@ body.is-hero .dots {
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
-  gap: clamp(8px, 2vh, 24px);
+  gap: clamp(6px, 1.4vh, 18px);
 }
 .ringhead {
   display: flex;
@@ -1339,9 +1339,7 @@ body.is-hero .dots {
   gap: clamp(14px, 2.2vw, 30px);
   flex-wrap: wrap;
 }
-.ringhead .kicker {
-  margin: 0;
-}
+.ringhead .kicker,
 .ringhead .h-md {
   margin: 0;
 }
@@ -1355,85 +1353,17 @@ body.is-hero .dots {
 }
 .stage3d {
   position: relative;
-  perspective: 1500px;
-  perspective-origin: 50% 46%;
   display: grid;
   place-items: center;
   min-height: 0;
 }
-.ring {
+
+.toono {
+  --d: min(58vh, 46vw, 560px);
   position: relative;
-  width: min(300px, 70vw);
-  height: min(370px, 52vh);
-  transform-style: preserve-3d;
-  transform: rotateX(-7deg) rotateY(calc(var(--rot, 0) * 1deg));
-}
-.face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(14px, 1.9vh, 24px);
-  border: 1px solid var(--rule);
-  background: var(--paper-hi);
-  box-shadow: 0 28px 56px -46px rgba(20, 18, 14, 0.75);
-  transform: rotateY(calc(var(--i) * 60deg)) translateZ(var(--radius, 300px));
-  backface-visibility: hidden;
-  transition:
-    border-color 0.4s,
-    box-shadow 0.4s;
-}
-.face:hover {
-  border-color: var(--ink);
-}
-.face__img {
-  overflow: hidden;
-  aspect-ratio: 16/10;
-  margin: -1px -1px clamp(10px, 1.8vh, 18px);
-  background: var(--paper-lo);
-}
-.face__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: var(--ph-f);
-  mix-blend-mode: multiply;
-  transition: transform 1s var(--e-out);
-}
-.face:hover .face__img img {
-  transform: scale(1.06);
-}
-.face__n {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 0.24em;
-  color: var(--ink-30);
-}
-.face h3 {
-  font-family: var(--f-display);
-  font-size: clamp(19px, min(2.1vw, 3vh), 28px);
-  font-weight: 500;
-  margin: 6px 0 7px;
-  line-height: 1.1;
-}
-.face p {
-  color: var(--ink-55);
-  font-size: clamp(12px, 1.55vh, 14px);
-  line-height: 1.5;
-}
-.stage3d__sh {
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  width: min(600px, 84vw);
-  height: 30px;
-  transform: translateX(-50%);
-  filter: blur(6px);
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(20, 18, 14, 0.16),
-    transparent 70%
-  );
+  width: var(--d);
+  height: var(--d);
+  color: var(--gold);
 }
 
 /* ─────────── 12. ЗОЛГОХ ЁС ─────────── */
