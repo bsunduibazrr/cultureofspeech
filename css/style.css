@@ -1482,15 +1482,35 @@ body.is-hero .dots {
   color: var(--ink-30);
   transform: rotate(var(--a)) translateY(calc(var(--d) * -0.465))
     rotate(calc(var(--a) * -1));
+  /* идэвхтэй дугаараас хол байх тусам бүдгэрч, хүрдэнд гүн өгнө */
+  opacity: calc(1 - var(--dist, 0) * 0.11);
   transition:
     color 0.45s var(--e-out),
-    opacity 0.45s;
+    opacity 0.45s var(--e-out);
+}
+.tn-lb::after {
+  /* идэвхтэй дугаарын эргэн тойрны хүрээ */
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+  border: 1px solid currentColor;
+  opacity: 0;
+  transform: scale(0.72);
+  transition:
+    opacity 0.4s var(--e-out),
+    transform 0.5s var(--e-spring);
 }
 .tn-lb:hover {
   color: var(--ink-55);
+  opacity: 1;
 }
 .tn-lb.is-on {
   color: var(--gold);
+  opacity: 1;
+}
+.tn-lb.is-on::after {
+  opacity: 0.45;
+  transform: none;
 }
 
 /* ── голын хөзөр ── */
