@@ -140,6 +140,8 @@
     document.body.classList.toggle("is-hero", cur === 0);
     bar.style.width = (((cur + 1) / TOTAL) * 100).toFixed(2) + "%";
     ringSlideActive = slides[cur].classList.contains("slide--ring");
+    if (tiltOn || tiltBack) tiltStop(true);
+    tiltScan();
   }
 
   /* ═══ 4. ҮЛДЭХ УДИРДЛАГА — дугуй, товчлуур, хуруу ═══ */
@@ -296,7 +298,8 @@
   ringPaint();
 
   /* ═══ 6. КУРСОР ═══
-     Курсорын цэг ба тойрог зөвхөн жинхэнэ хулганыг дагана. */
+     Курсорын цэг ба тойрог зөвхөн жинхэнэ хулганыг дагана.
+     Слайдын налалт үүнээс хамаарахаа больсон — доорх 7-р хэсгийг үз. */
   var mx = window.innerWidth / 2, my = window.innerHeight / 2;
   var rx = mx, ry = my;
 
@@ -327,9 +330,65 @@
     });
   }
 
-  /* ═══ 7. ← → — ТОВШИХ БА ДАРЖ БАРИХЫГ ЯЛГАНА ═══ */
+  /* ═══ 7. НАЛАЛТ — ← → ТОВЧЛУУРААР ЭРГҮҮЛНЭ ═══
+     Товшвол слайд солино, дарж барьвал налалт тэр зүг рүүгээ эргэнэ.
+     Товчийг тавихад налалт голдоо зөөлөн буцаж ирнэ. */
   var TAP_MS = 190;     // үүнээс богино дарахыг "товшилт" гэж үзнэ
+  var TILT_SPD = 1.45;  // 1 секундэд налалтын бүтэн хэмжээний хэдийг туулах
+  var TILT_DEG = 3.4;   // слайдын хамгийн их эргэлт
+  var tiltOn = false, tiltBack = false, tiltDir = 0, tiltA = 0;
+  var tiltEls = [];     // идэвхтэй слайд дээрх налдаг хөзрүүд
   var arrows = {};
+
+  /* идэвхтэй слайд солигдоход налдаг элементүүдийг дахин цуглуулна */
+  function tiltScan() {
+    for (var i = 0; i < tiltEls.length; i++) tiltEls[i].tiltOff();
+    tiltEls = $$(".tilt", slides[cur]);
+    for (var j = 0; j < tiltEls.length; j++) if (!tiltEls[j].tiltOff) tiltInit(tiltEls[j]);
+  }
+
+  function tiltInit(el) {
+    el.tiltOff = function () {
+      el.classList.remove("is-tilt");
+      el.style.transform = "";
+    };
+  }
+
+  /* a ∈ [-1 … 1] — бүх налалтыг нэг өнцгөөс жолоодно */
+  function tiltPaint(a) {
+    root.style.setProperty("--mx", (a * TILT_DEG).toFixed(3) + "deg");
+    for (var i = 0; i < tiltEls.length; i++) {
+      var el = tiltEls[i];
+      if (!a) { el.tiltOff(); continue; }
+      el.classList.add("is-tilt");
+      el.style.transform =
+        "perspective(900px) rotateY(" + (a * 8).toFixed(2) +
+        "deg) rotateX(" + (-Math.abs(a) * 2).toFixed(2) +
+        "deg) translateZ(" + (Math.abs(a) * 18).toFixed(1) + "px)";
+    }
+  }
+
+  function tiltStart(d) {
+    tiltOn = true;
+    tiltBack = false;
+    tiltDir = d;
+    document.body.classList.add("is-tilting");
+    dimHint();
+  }
+
+  /* hard=true — шууд таслана, hard=false — голдоо зөөлөн буцна */
+  function tiltStop(hard) {
+    tiltOn = false;
+    tiltDir = 0;
+    if (hard) {
+      tiltBack = false;
+      tiltA = 0;
+      tiltPaint(0);
+      document.body.classList.remove("is-tilting");
+    } else {
+      tiltBack = true;
+    }
+  }
 
   function arrowDown(k) {
     if (arrows[k]) return; // товчны auto-repeat-ыг үл тоомсорлоно
@@ -343,6 +402,7 @@
     var a = (arrows[k] = { m: "tap" });
     a.t = setTimeout(function () {
       a.m = "hold";
+      tiltStart(d);
     }, TAP_MS);
   }
 
@@ -352,6 +412,12 @@
     arrows[k] = null;
     clearTimeout(a.t);
     if (a.m === "tap") go(cur + (k === "ArrowRight" ? 1 : -1));
+    else if (a.m === "hold") {
+      var o = k === "ArrowRight" ? "ArrowLeft" : "ArrowRight";
+      if (arrows[o] && arrows[o].m === "hold")
+        tiltDir = o === "ArrowRight" ? 1 : -1; // нөгөө нь үргэлжлүүлнэ
+      else tiltStop(false);
+    }
   }
 
   document.addEventListener("keyup", function (e) {
@@ -361,11 +427,29 @@
     ["ArrowRight", "ArrowLeft"].forEach(function (k) {
       if (arrows[k]) { clearTimeout(arrows[k].t); arrows[k] = null; }
     });
+    if (tiltOn || tiltBack) tiltStop(true);
   });
 
   /* ═══ 9. ГОЛ ЦИКЛ ═══ */
-  var pdx = -1, pdy = -1;
+  var lastT = 0, pdx = -1, pdy = -1;
   function frame(now) {
+    var dt = lastT ? Math.min((now - lastT) / 1000, 0.05) : 0;
+    lastT = now;
+
+    if (tiltOn || tiltBack) {
+      if (tiltOn && tiltDir) {
+        tiltA = clamp(tiltA + tiltDir * TILT_SPD * dt, -1, 1);
+      } else {
+        tiltA += (0 - tiltA) * 0.11;
+        if (Math.abs(tiltA) < 0.005) {
+          tiltA = 0;
+          tiltBack = false;
+          document.body.classList.remove("is-tilting");
+        }
+      }
+      tiltPaint(tiltA);
+    }
+
     if (cdot && (mx !== pdx || my !== pdy)) {
       pdx = mx;
       pdy = my;
@@ -383,7 +467,14 @@
     requestAnimationFrame(frame);
   }
 
-  window.addEventListener("resize", layoutRing, { passive: true });
+  window.addEventListener(
+    "resize",
+    function () {
+      layoutRing();
+      if (tiltOn || tiltBack) tiltStop(true);
+    },
+    { passive: true },
+  );
 
   var loader = $("#loader"),
     lbar = $("#loaderBar"),
