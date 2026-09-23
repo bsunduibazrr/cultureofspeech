@@ -1414,7 +1414,16 @@ body.is-hero .dots {
 }
 .tn-nd circle {
   fill: currentColor;
-  opacity: 0.5;
+  opacity: 0.32;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.5s var(--e-out),
+    transform 0.6s var(--e-spring);
+}
+.tn-nd circle.is-on {
+  opacity: 1;
+  transform: scale(1.75);
 }
 
 /* ── эргэх зүү ── */
