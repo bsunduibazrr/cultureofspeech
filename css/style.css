@@ -1385,8 +1385,10 @@ body.is-hero .dots {
 .tn-ring {
   stroke-width: 1.1;
   opacity: 0.6;
-  stroke-dasharray: 1200;
-  stroke-dashoffset: 1200;
+  /* non-scaling-stroke-тэй үед зураасны урт дэлгэцийн масштабаар тооцогддог
+     тул тойргийн уртаас хол давсан утга өгнө */
+  stroke-dasharray: 3200;
+  stroke-dashoffset: 3200;
 }
 .tn-ring--out {
   stroke-width: 1;
