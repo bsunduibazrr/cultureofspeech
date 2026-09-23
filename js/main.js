@@ -194,12 +194,9 @@
     } else if (k === "ArrowUp" || k === "PageUp" || k === "Backspace") {
       e.preventDefault();
       go(cur - 1);
-    } else if (k === "ArrowRight") {
+    } else if (k === "ArrowRight" || k === "ArrowLeft") {
       e.preventDefault();
-      ringSlideActive ? ringStep(1) : go(cur + 1);
-    } else if (k === "ArrowLeft") {
-      e.preventDefault();
-      ringSlideActive ? ringStep(-1) : go(cur - 1);
+      arrowDown(k);
     } else if (k === "Home") {
       e.preventDefault();
       go(0);
@@ -298,79 +295,28 @@
   });
   ringPaint();
 
-  /* ═══ 6. ХУЛГАНЫ ПАРАЛЛАКС — слайд амьд мэт хазайна ═══ */
-  var pmx = 0,
-    pmy = 0,
-    cmx = 0,
-    cmy = 0;
-  if (!coarse && !reduced) {
-    window.addEventListener(
-      "mousemove",
-      function (e) {
-        pmx = (e.clientX / window.innerWidth - 0.5) * 2;
-        pmy = (e.clientY / window.innerHeight - 0.5) * 2;
-      },
-      { passive: true },
-    );
-  }
+  /* ═══ 6. КУРСОР ═══
+     Курсорын цэг ба тойрог зөвхөн жинхэнэ хулганыг дагана. */
+  var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  var rx = mx, ry = my;
 
-  /* ═══ 7. 3D HOVER TILT ═══ */
-  if (!coarse && !reduced) {
-    $$(".tilt").forEach(function (el) {
-      var raf = null,
-        tx = 0,
-        ty = 0;
-      function apply() {
-        raf = null;
-        el.style.transform =
-          "perspective(900px) rotateX(" +
-          tx.toFixed(2) +
-          "deg) rotateY(" +
-          ty.toFixed(2) +
-          "deg) translateZ(20px)";
-      }
-      el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        tx = -((e.clientY - r.top) / r.height - 0.5) * 10;
-        ty = ((e.clientX - r.left) / r.width - 0.5) * 12;
-        if (!raf) raf = requestAnimationFrame(apply);
-      });
-      el.addEventListener("mouseleave", function () {
-        if (raf) {
-          cancelAnimationFrame(raf);
-          raf = null;
-        }
-        el.style.transform = "";
-      });
-    });
-  }
+  var curEl = coarse ? null : $("#cursor");
+  var cdot = curEl ? $(".cursor__dot", curEl) : null;
+  var cring = curEl ? $(".cursor__ring", curEl) : null;
 
-  /* ═══ 8. КУРСОР ═══ */
-  var cring = null,
-    cdot = null,
-    rx = 0,
-    ry = 0,
-    mx = 0,
-    my = 0;
-  if (!coarse) {
-    var curEl = $("#cursor");
-    cdot = $(".cursor__dot", curEl);
-    cring = $(".cursor__ring", curEl);
-    mx = rx = window.innerWidth / 2;
-    my = ry = window.innerHeight / 2;
+  var HOT =
+    "a,button,.trio__i,.face,.season,.meme,.mcard,.member,.tone,.sticky-note,.ph,.vcol li";
+
+  if (!coarse && curEl) {
     window.addEventListener(
       "mousemove",
       function (e) {
         mx = e.clientX;
         my = e.clientY;
         curEl.classList.add("is-on");
-        cdot.style.transform =
-          "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
       },
       { passive: true },
     );
-    var HOT =
-      "a,button,.trio__i,.face,.season,.meme,.mcard,.member,.tone,.sticky-note,.ph,.vcol li";
     document.addEventListener("mouseover", function (e) {
       if (e.target.closest && e.target.closest(HOT))
         curEl.classList.add("is-hot");
@@ -381,21 +327,57 @@
     });
   }
 
-  /* ═══ 9. ГОЛ ЦИКЛ ═══ */
-  function frame(now) {
-    cmx += (pmx - cmx) * 0.06;
-    cmy += (pmy - cmy) * 0.06;
-    root.style.setProperty("--mx", (cmx * 2.6).toFixed(3) + "deg");
-    root.style.setProperty("--my", (-cmy * 1.9).toFixed(3) + "deg");
+  /* ═══ 7. ← → — ТОВШИХ БА ДАРЖ БАРИХЫГ ЯЛГАНА ═══ */
+  var TAP_MS = 190;     // үүнээс богино дарахыг "товшилт" гэж үзнэ
+  var arrows = {};
 
+  function arrowDown(k) {
+    if (arrows[k]) return; // товчны auto-repeat-ыг үл тоомсорлоно
+    var d = k === "ArrowRight" ? 1 : -1;
+    if (ringSlideActive) { arrows[k] = { m: "done" }; ringStep(d); return; }
+    if (reduced || coarse) {
+      arrows[k] = { m: "done" };
+      go(cur + d);
+      return;
+    }
+    var a = (arrows[k] = { m: "tap" });
+    a.t = setTimeout(function () {
+      a.m = "hold";
+    }, TAP_MS);
+  }
+
+  function arrowUp(k) {
+    var a = arrows[k];
+    if (!a) return;
+    arrows[k] = null;
+    clearTimeout(a.t);
+    if (a.m === "tap") go(cur + (k === "ArrowRight" ? 1 : -1));
+  }
+
+  document.addEventListener("keyup", function (e) {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") arrowUp(e.key);
+  });
+  window.addEventListener("blur", function () {
+    ["ArrowRight", "ArrowLeft"].forEach(function (k) {
+      if (arrows[k]) { clearTimeout(arrows[k].t); arrows[k] = null; }
+    });
+  });
+
+  /* ═══ 9. ГОЛ ЦИКЛ ═══ */
+  var pdx = -1, pdy = -1;
+  function frame(now) {
+    if (cdot && (mx !== pdx || my !== pdy)) {
+      pdx = mx;
+      pdy = my;
+      cdot.style.transform =
+        "translate(" + mx.toFixed(1) + "px," + my.toFixed(1) +
+        "px) translate(-50%,-50%)";
+    }
     if (cring) {
       rx += (mx - rx) * 0.16;
       ry += (my - ry) * 0.16;
       cring.style.transform =
-        "translate(" +
-        rx.toFixed(1) +
-        "px," +
-        ry.toFixed(1) +
+        "translate(" + rx.toFixed(1) + "px," + ry.toFixed(1) +
         "px) translate(-50%,-50%)";
     }
     requestAnimationFrame(frame);
