@@ -233,31 +233,56 @@
   var ring = $("#ring");
   var cards = ring ? $$(".tn-card", ring) : [];
   var marks = ring ? $$(".tn-lb", ring) : [];
+  var nodes = ring ? $$(".tn-nd circle", ring) : [];
   var FACE_N = cards.length || 1,
     STEP = 360 / FACE_N;
   var ringIdx = 0,
-    ringSlideActive = false;
+    ringSlideActive = false,
+    ringFace = -1,
+    ringOutT = 0;
   /* Автоматаар эргэдэггүй — үзэгч бүрэн уншиж амжина.
      Эргэлт нь зөвхөн ← →, дугаар товшилт, хуруу шудрахад л болно. */
 
   /* хэмжээг CSS өөрөө зохицуулдаг тул зөвхөн нийцэл хадгалахад */
   function layoutRing() {}
 
-  function ringPaint() {
+  function ringClearOut() {
+    for (var i = 0; i < cards.length; i++) cards[i].classList.remove("is-out");
+  }
+
+  function ringPaint(dir) {
     if (!ring) return;
     var a = ((ringIdx % FACE_N) + FACE_N) % FACE_N;
     ring.style.setProperty("--ang", (ringIdx * STEP).toFixed(2) + "deg");
+    ring.style.setProperty("--dir", dir < 0 ? -1 : 1);
     ring.dataset.active = a;
+
+    /* гарч буй хөзрийг түр тэмдэглэнэ — эсрэг тал руугаа нисч оддог */
+    if (a !== ringFace) {
+      clearTimeout(ringOutT);
+      ringClearOut();
+      if (ringFace >= 0 && cards[ringFace]) cards[ringFace].classList.add("is-out");
+      ringFace = a;
+      ringOutT = setTimeout(ringClearOut, 820);
+    }
+
     for (var i = 0; i < cards.length; i++)
       cards[i].classList.toggle("is-on", i === a);
-    for (var j = 0; j < marks.length; j++)
+    for (var j = 0; j < marks.length; j++) {
+      /* идэвхтэйгээс хэдэн алхмын зайтай вэ — бүдгэрэлтийг тооцоход */
+      var dd = Math.abs(j - a);
+      if (dd > FACE_N / 2) dd = FACE_N - dd;
+      marks[j].style.setProperty("--dist", dd);
       marks[j].classList.toggle("is-on", j === a);
+    }
+    for (var k = 0; k < nodes.length; k++)
+      nodes[k].classList.toggle("is-on", k === a);
   }
 
   function ringStep(d) {
     if (!d) return;
     ringIdx += d;
-    ringPaint();
+    ringPaint(d);
     dimHint();
   }
 
