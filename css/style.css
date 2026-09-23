@@ -1562,6 +1562,12 @@ body.is-hero .dots {
   object-fit: cover;
   filter: var(--ph-f);
   mix-blend-mode: multiply;
+  transform: scale(1.14);
+  transition: transform 1.5s var(--e-out);
+}
+.tn-card.is-on .tn-card__img img {
+  transform: none;
+  transition-delay: 0.22s;
 }
 .tn-card__n {
   font-family: var(--f-mono);
