@@ -1447,6 +1447,41 @@ body.is-hero .dots {
   }
 }
 
+/* ── ирмэг дээрх дугаарууд ── */
+.toono__marks {
+  position: absolute;
+  inset: 0;
+}
+.tn-lb {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -9px 0 0 -11px;
+  width: 22px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-30);
+  transform: rotate(var(--a)) translateY(calc(var(--d) * -0.465))
+    rotate(calc(var(--a) * -1));
+  transition:
+    color 0.45s var(--e-out),
+    opacity 0.45s;
+}
+.tn-lb:hover {
+  color: var(--ink-55);
+}
+.tn-lb.is-on {
+  color: var(--gold);
+}
+
 /* ─────────── 12. ЗОЛГОХ ЁС ─────────── */
 .zolgo {
   display: grid;
