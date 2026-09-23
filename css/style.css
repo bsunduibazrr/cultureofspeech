@@ -1439,7 +1439,7 @@ body.is-hero .dots {
 .tn-hand {
   transform: rotate(var(--ang, 0deg));
   transform-origin: 200px 200px;
-  transition: transform 0.85s var(--e-out);
+  transition: transform 0.82s cubic-bezier(0.34, 1.32, 0.42, 1);
 }
 .tn-hand path {
   stroke-width: 1.8;
