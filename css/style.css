@@ -2324,10 +2324,12 @@ body.is-hero .dots {
 /* цаасан хөшиг — текстийг зургаас тусгаарлана */
 .slide--q .slide__inner::before,
 .slide--quote .slide__inner::before {
-  content: ""; position: absolute; inset: -18% -12%; z-index: -1;
+  content: ""; position: absolute; inset: -34% -26%; z-index: -1;
+  /* текстийн эзлэх талбай бүхэлдээ битүү цаас — гарчиг зурган дээр "живэхгүй" */
   background: radial-gradient(closest-side,
-    var(--paper) 42%, rgba(244, 242, 236, 0.93) 66%,
-    rgba(244, 242, 236, 0.55) 84%, rgba(244, 242, 236, 0) 100%);
+    var(--paper) 0 54%, rgba(244, 242, 236, 0.97) 70%,
+    rgba(244, 242, 236, 0.78) 82%, rgba(244, 242, 236, 0.34) 92%,
+    rgba(244, 242, 236, 0) 100%);
 }
 .qlabel {
   display: inline-block;
