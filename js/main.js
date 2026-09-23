@@ -140,7 +140,6 @@
     document.body.classList.toggle("is-hero", cur === 0);
     bar.style.width = (((cur + 1) / TOTAL) * 100).toFixed(2) + "%";
     ringSlideActive = slides[cur].classList.contains("slide--ring");
-    if (ringSlideActive) ringLast = performance.now();
   }
 
   /* ═══ 4. ҮЛДЭХ УДИРДЛАГА — дугуй, товчлуур, хуруу ═══ */
@@ -237,9 +236,9 @@
   var FACE_N = cards.length || 1,
     STEP = 360 / FACE_N;
   var ringIdx = 0,
-    ringSlideActive = false,
-    ringLast = 0;
-  var DWELL_MS = 3600; // нэг төрөл дээр тогтох хугацаа
+    ringSlideActive = false;
+  /* Автоматаар эргэдэггүй — үзэгч бүрэн уншиж амжина.
+     Эргэлт нь зөвхөн ← →, дугаар товшилт, хуруу шудрахад л болно. */
 
   /* хэмжээг CSS өөрөө зохицуулдаг тул зөвхөн нийцэл хадгалахад */
   function layoutRing() {}
@@ -255,18 +254,11 @@
       marks[j].classList.toggle("is-on", j === a);
   }
 
-  function ringGo(d, now) {
-    ringIdx += d;
-    ringLast = now;
-    ringPaint();
-  }
   function ringStep(d) {
     if (!d) return;
-    ringGo(d, performance.now());
+    ringIdx += d;
+    ringPaint();
     dimHint();
-  }
-  function ringTick(now) {
-    if (ring && ringSlideActive && now - ringLast > DWELL_MS) ringGo(1, now);
   }
 
   /* дугаар дээр дарахад хамгийн ойр талаар нь эргэнэ */
@@ -366,8 +358,6 @@
 
   /* ═══ 9. ГОЛ ЦИКЛ ═══ */
   function frame(now) {
-    ringTick(now);
-
     cmx += (pmx - cmx) * 0.06;
     cmy += (pmy - cmy) * 0.06;
     root.style.setProperty("--mx", (cmx * 2.6).toFixed(3) + "deg");
