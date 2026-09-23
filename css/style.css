@@ -2216,6 +2216,8 @@ body.is-hero .dots {
 }
 .slide--outro .slide__inner {
   text-align: center;
+  /* төгсгөлийн слайд — хулганы араас хазайхгүй, тайван зогсоно */
+  transform: none;
 }
 .outro__title {
   font-family: var(--f-display);

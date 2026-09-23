@@ -140,6 +140,8 @@
     document.body.classList.toggle("is-hero", cur === 0);
     bar.style.width = (((cur + 1) / TOTAL) * 100).toFixed(2) + "%";
     ringSlideActive = slides[cur].classList.contains("slide--ring");
+    /* төгсгөлийн слайд дээр налалт огт ажиллахгүй */
+    flatSlide = slides[cur].classList.contains("slide--outro");
     if (tiltOn || tiltBack) tiltStop(true);
     tiltScan();
   }
@@ -237,6 +239,7 @@
     STEP = 360 / FACE_N;
   var ringIdx = 0,
     ringSlideActive = false,
+    flatSlide = false,
     ringFace = -1,
     ringOutT = 0;
   /* Автоматаар эргэдэггүй — үзэгч бүрэн уншиж амжина.
@@ -394,7 +397,7 @@
     if (arrows[k]) return; // товчны auto-repeat-ыг үл тоомсорлоно
     var d = k === "ArrowRight" ? 1 : -1;
     if (ringSlideActive) { arrows[k] = { m: "done" }; ringStep(d); return; }
-    if (reduced || coarse) {
+    if (reduced || coarse || flatSlide) {
       arrows[k] = { m: "done" };
       go(cur + d);
       return;
