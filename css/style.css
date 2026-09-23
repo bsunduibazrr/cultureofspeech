@@ -12,6 +12,7 @@
   --rule: #d9d4c8;
   --rule-soft: #e6e2d8;
   --khad-blue: #2f5d9e;
+  --khad-white: #fdfcf9;
   --khad-yellow: #c69a2a;
   --khad-red: #9e3327;
   --khad-green: #3f6b46;
@@ -1955,7 +1956,7 @@ body.is-hero .dots {
   --tone: var(--khad-blue);
 }
 .tone[data-tone="white"] {
-  --tone: #fff;
+  --tone: var(--khad-white);
 }
 .tone[data-tone="yellow"] {
   --tone: var(--khad-yellow);
