@@ -1366,6 +1366,46 @@ body.is-hero .dots {
   color: var(--gold);
 }
 
+/* ── тойргийн зураг ── */
+.toono__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.toono__svg .tn-ring,
+.toono__svg .tn-sp path,
+.toono__svg .tn-hand path {
+  fill: none;
+  stroke: currentColor;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+.tn-ring {
+  stroke-width: 1.1;
+  opacity: 0.6;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+}
+.tn-ring--out {
+  stroke-width: 1;
+  opacity: 0.26;
+  stroke-dasharray: 2 7;
+  stroke-dashoffset: 0;
+}
+.slide.is-active .tn-ring {
+  animation: tnDraw 1.7s var(--e-out) 0.35s forwards;
+}
+.slide.is-active .tn-ring--out {
+  animation: none;
+  opacity: 0.26;
+}
+@keyframes tnDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
 /* ─────────── 12. ЗОЛГОХ ЁС ─────────── */
 .zolgo {
   display: grid;
