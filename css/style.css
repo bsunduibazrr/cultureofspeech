@@ -1546,6 +1546,28 @@ body.is-hero .dots {
   line-height: 1.5;
 }
 
+/* ── нарийн дэлгэц: тойргийг хасаж, хөзрийг томсгоно ── */
+@media (max-width: 720px), (max-height: 520px) {
+  .toono {
+    --d: min(76vw, 60vh);
+    width: 100%;
+    height: auto;
+  }
+  .toono__svg,
+  .toono__marks {
+    display: none;
+  }
+  .toono__stack {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: min(300px, 82vw);
+    height: min(370px, 56vh);
+    margin-inline: auto;
+    transform: none;
+  }
+}
+
 /* ─────────── 12. ЗОЛГОХ ЁС ─────────── */
 .zolgo {
   display: grid;
