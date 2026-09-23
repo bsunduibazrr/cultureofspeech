@@ -1527,6 +1527,29 @@ body.is-hero .dots {
     transform 0.8s var(--e-spring) 0.16s,
     visibility 0s;
 }
+
+/* хөзрийн доторх агуулга ээлжлэн гарч ирнэ */
+.tn-card__img,
+.tn-card__n,
+.tn-card h3,
+.tn-card p {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.5s var(--e-out),
+    transform 0.6s var(--e-out);
+}
+.tn-card.is-on .tn-card__img,
+.tn-card.is-on .tn-card__n,
+.tn-card.is-on h3,
+.tn-card.is-on p {
+  opacity: 1;
+  transform: none;
+}
+.tn-card.is-on .tn-card__img { transition-delay: 0.22s }
+.tn-card.is-on .tn-card__n   { transition-delay: 0.3s }
+.tn-card.is-on h3            { transition-delay: 0.36s }
+.tn-card.is-on p             { transition-delay: 0.42s }
 .tn-card__img {
   overflow: hidden;
   aspect-ratio: 16/10;
