@@ -1492,6 +1492,7 @@ body.is-hero .dots {
   width: calc(var(--d) * 0.47);
   height: calc(var(--d) * 0.55);
   transform: translate(-50%, -50%);
+  perspective: 1100px;
 }
 .tn-card {
   position: absolute;
