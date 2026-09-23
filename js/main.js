@@ -140,7 +140,7 @@
     document.body.classList.toggle("is-hero", cur === 0);
     bar.style.width = (((cur + 1) / TOTAL) * 100).toFixed(2) + "%";
     ringSlideActive = slides[cur].classList.contains("slide--ring");
-    if (ringSlideActive) ringLast = ringT0 = performance.now();
+    if (ringSlideActive) ringLast = performance.now();
   }
 
   /* ═══ 4. ҮЛДЭХ УДИРДЛАГА — дугуй, товчлуур, хуруу ═══ */
@@ -230,65 +230,56 @@
     hintEl.classList.add("is-dim");
   }
 
-  /* ═══ 5. 3D БӨГЖ — өөрөө эргэнэ, ← → -ээр удирдана ═══ */
+  /* ═══ 5. ТООНО ХҮРД — сонголт тойргоор эргэнэ ═══ */
   var ring = $("#ring");
-  var faces = ring ? $$(".face", ring) : [];
-  var FACE_N = faces.length || 1,
+  var cards = ring ? $$(".tn-card", ring) : [];
+  var marks = ring ? $$(".tn-lb", ring) : [];
+  var FACE_N = cards.length || 1,
     STEP = 360 / FACE_N;
   var ringIdx = 0,
-    ringRot = 0,
     ringSlideActive = false,
     ringLast = 0;
-  var ringFrom = 0,
-    ringTo = 0,
-    ringT0 = -1e9;
-  var TURN_MS = 1500; // нэг хөзрөөс нөгөөд шилжих хугацаа
-  var DWELL_MS = 2600; // хөзөр дээр тогтох хугацаа
+  var DWELL_MS = 3600; // нэг төрөл дээр тогтох хугацаа
 
-  function layoutRing() {
+  /* хэмжээг CSS өөрөө зохицуулдаг тул зөвхөн нийцэл хадгалахад */
+  function layoutRing() {}
+
+  function ringPaint() {
     if (!ring) return;
-    var w = ring.offsetWidth;
-    ring.style.setProperty(
-      "--radius",
-      ((w / 2 / Math.tan(Math.PI / FACE_N)) * 1.08).toFixed(1) + "px",
-    );
-  }
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    var a = ((ringIdx % FACE_N) + FACE_N) % FACE_N;
+    ring.style.setProperty("--ang", (ringIdx * STEP).toFixed(2) + "deg");
+    ring.dataset.active = a;
+    for (var i = 0; i < cards.length; i++)
+      cards[i].classList.toggle("is-on", i === a);
+    for (var j = 0; j < marks.length; j++)
+      marks[j].classList.toggle("is-on", j === a);
   }
 
   function ringGo(d, now) {
     ringIdx += d;
-    ringFrom = ringRot;
-    ringTo = -ringIdx * STEP;
-    ringT0 = now;
     ringLast = now;
+    ringPaint();
   }
   function ringStep(d) {
+    if (!d) return;
     ringGo(d, performance.now());
     dimHint();
   }
-
   function ringTick(now) {
-    if (!ring) return;
-
-    /* жигд эхэлж, жигд зогсох гулсалт */
-    var t = clamp((now - ringT0) / TURN_MS, 0, 1);
-    ringRot =
-      ringFrom + (ringTo - ringFrom) * (reduced ? 1 : easeInOutCubic(t));
-
-    /* тогтсоны дараа өөрөө дараагийн хөзөр рүү */
-    if (ringSlideActive && t >= 1 && now - ringLast > TURN_MS + DWELL_MS)
-      ringGo(1, now);
-
-    ring.style.setProperty("--rot", ringRot.toFixed(2));
-    for (var i = 0; i < faces.length; i++) {
-      var f = Math.max(0, Math.cos(((i * STEP + ringRot) * Math.PI) / 180));
-      faces[i].style.opacity = (0.12 + 0.88 * f).toFixed(3);
-      faces[i].style.filter =
-        f > 0.985 ? "none" : "blur(" + ((1 - f) * 2.6).toFixed(2) + "px)";
-    }
+    if (ring && ringSlideActive && now - ringLast > DWELL_MS) ringGo(1, now);
   }
+
+  /* дугаар дээр дарахад хамгийн ойр талаар нь эргэнэ */
+  marks.forEach(function (m, k) {
+    m.addEventListener("click", function () {
+      var a = ((ringIdx % FACE_N) + FACE_N) % FACE_N;
+      var d = k - a;
+      if (d > FACE_N / 2) d -= FACE_N;
+      if (d < -FACE_N / 2) d += FACE_N;
+      ringStep(d);
+    });
+  });
+  ringPaint();
 
   /* ═══ 6. ХУЛГАНЫ ПАРАЛЛАКС — слайд амьд мэт хазайна ═══ */
   var pmx = 0,
