@@ -1399,9 +1399,18 @@ body.is-hero .dots {
 .slide.is-active .tn-ring {
   animation: tnDraw 1.7s var(--e-out) 0.35s forwards;
 }
+.tn-ring--out {
+  transform-origin: 200px 200px;
+}
 .slide.is-active .tn-ring--out {
-  animation: none;
+  /* зурагдах анимацийг сольж, аажуухан эргэлдэнэ */
+  animation: tnSpin 120s linear infinite;
   opacity: 0.26;
+}
+@keyframes tnSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes tnDraw {
   to {
