@@ -1916,23 +1916,19 @@ body.is-hero .dots {
   max-height: 58vh;
 }
 .tones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: clamp(16px, 2.6vh, 30px);
+  margin-top: clamp(14px, 2.2vh, 26px);
+  border-top: 1px solid var(--rule-soft);
 }
 .tone {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 13px 8px 9px;
-  border: 1px solid var(--rule);
-  background: var(--paper-hi);
-  font-size: 12.5px;
+  display: grid;
+  grid-template-columns: auto minmax(52px, auto) 1fr;
+  align-items: baseline;
+  column-gap: clamp(9px, 1.2vw, 16px);
+  padding: clamp(6px, 1.05vh, 11px) 2px;
+  border-bottom: 1px solid var(--rule-soft);
   transition:
-    transform 0.5s var(--e-spring),
-    border-color 0.4s,
-    box-shadow 0.5s;
+    padding-left 0.4s var(--e-out),
+    background 0.4s;
 }
 .tone i {
   width: 11px;
@@ -1940,17 +1936,31 @@ body.is-hero .dots {
   border-radius: 50%;
   background: var(--tone);
   flex: none;
+  align-self: center;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
 }
 .tone b {
-  font-weight: 400;
-  color: var(--ink-30);
-  font-size: 11px;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: clamp(14px, 1.85vh, 18px);
+}
+.tone span {
+  color: var(--ink-55);
+  font-size: clamp(11.5px, 1.45vh, 13.5px);
+  line-height: 1.45;
 }
 .tone:hover {
-  transform: translateY(-4px) scale(1.04);
-  border-color: var(--ink-30);
-  box-shadow: 0 14px 26px -20px rgba(20, 18, 14, 0.7);
+  padding-left: 10px;
+  background: var(--paper-hi);
+}
+@media (max-width: 620px) {
+  .tone {
+    grid-template-columns: auto 1fr;
+    row-gap: 2px;
+  }
+  .tone span {
+    grid-column: 2;
+  }
 }
 .tone[data-tone="blue"] {
   --tone: var(--khad-blue);
